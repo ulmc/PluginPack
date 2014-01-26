@@ -64,23 +64,46 @@ class SeasonEditor(Runnable):
 
     def summerise(self, shot, x, y, z, xx, zz):
         if 15 < y < randint(129, 134):
-            for i in range(y, y - 10, -1):
+            for i in range(y, y - 15, -1):
                 if shot.getBlockTypeId(x, i, z) == 78:
                     self.world.getBlockAt(xx, i, zz).setTypeId(0)
                 elif shot.getBlockTypeId(x, i - 1, z) == 79:
                     self.world.getBlockAt(xx, i - 1, zz).setTypeId(8)
+                    break
 
     def winterise(self, shot, x, y, z, xx, zz):
-        if shot.getBlockTypeId(x, y - 1, z) in (8, 9) and shot.getBlockData(x, y - 1, z) == 0:
-            self.world.getBlockAt(xx, y - 1, zz).setTypeId(79)
-        elif shot.getBlockTypeId(x, y, z) == 0 and shot.getBlockTypeId(x, y - 1, z) not in (9, 8):
-            def glass():
-                for j in range(y + 1, y + 20):
-                    if shot.getBlockTypeId(x, j, z) != 0:
-                        return False
-                return True
+        # def ice(H):
+        #     if 0 < x < 15 and 0 < z < 15:
+        #         for i, j in ((1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1)):
+        #             bb = shot.getBlockTypeId(x + i, H, z + j)
+        #             if bb == 8 and shot.getBlockData(x + i, H, z + j) == 0:
+        #                 self.world.getBlockAt(xx + i, H, zz + j).setTypeId(79)
+        #             if bb == 9:
+        #                 self.world.getBlockAt(xx + i, H, zz + j).setTypeId(79)
 
-            if glass():
+        if 15 < y < 230:
+            y1 = shot.getBlockTypeId(x, y - 1, z)
+            if y1 == 9:
+                self.world.getBlockAt(xx, y - 1, zz).setTypeId(79)
+            elif y1 == 8 and shot.getBlockData(x, y - 1, z) == 0:
+                self.world.getBlockAt(xx, y - 1, zz).setTypeId(79)
+            elif y1 == 18:
+                for i in xrange(y - 2, y - 25, -1):
+                    y2 = shot.getBlockTypeId(x, i, z)
+                    if y2 not in (18, 0, 17):
+                        if y2 == 9:
+                            self.world.getBlockAt(xx, i, zz).setTypeId(79)
+                        elif y2 == 8 and shot.getBlockData(x, i, z) == 0:
+                            self.world.getBlockAt(xx, i, zz).setTypeId(79)
+                        break
+            elif shot.getBlockTypeId(x, y, z) == 0:
+                # def glass():
+                #     for j in range(y + 1, y + 25):
+                #         if shot.getBlockTypeId(x, j, z) != 0:
+                #             return False
+                #     return True
+                #
+                # if glass():
                 self.world.getBlockAt(xx, y, zz).setTypeId(78)
 
     def change(self, chunk):
