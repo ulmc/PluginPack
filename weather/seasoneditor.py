@@ -31,7 +31,7 @@ class SeasonEditor(Runnable):
         self.world = world
 
     hot = (Biome.RIVER, Biome.PLAINS, Biome.FOREST, Biome.FOREST_HILLS, Biome.EXTREME_HILLS,
-           Biome.SMALL_MOUNTAINS, Biome.BEACH)
+           Biome.SMALL_MOUNTAINS)
 
     cold = (Biome.FROZEN_RIVER, Biome.ICE_PLAINS, Biome.TAIGA, Biome.TAIGA_HILLS, Biome.ICE_MOUNTAINS)
 
@@ -39,7 +39,7 @@ class SeasonEditor(Runnable):
                Biome.TAIGA_HILLS: Biome.FOREST_HILLS, Biome.ICE_MOUNTAINS: Biome.EXTREME_HILLS,
                Biome.RIVER: Biome.FROZEN_RIVER, Biome.PLAINS: Biome.ICE_PLAINS, Biome.FOREST: Biome.TAIGA,
                Biome.FOREST_HILLS: Biome.TAIGA_HILLS, Biome.EXTREME_HILLS: Biome.ICE_MOUNTAINS,
-               Biome.SMALL_MOUNTAINS: Biome.ICE_MOUNTAINS, Biome.BEACH: Biome.ICE_PLAINS}
+               Biome.SMALL_MOUNTAINS: Biome.ICE_MOUNTAINS}
 
     def seasons(self, times):
         if self.months[times] in (2, 1):
@@ -54,25 +54,28 @@ class SeasonEditor(Runnable):
     def cells(self, season, cx, cz):
         chunkbiomes = []
         for x in xrange(16):
+            xx = cx + x
             for z in xrange(16):
-                xx, zz = cx + x, cz + z
+                zz = cz + z
                 biome = self.world.getBiome(xx, zz)
                 if biome in season:
                     chunkbiomes += [(biome, xx, zz, x, z)]
         return chunkbiomes
 
     def summerise(self, shot, x, y, z, xx, zz):
-        if shot.getBlockTypeId(x, y, z) == 78 and y < randint(129, 134):
-            self.world.getBlockAt(xx, y, zz).setTypeId(0)
-        elif shot.getBlockTypeId(x, y - 1, z) == 79 and y < randint(129, 131):
-            self.world.getBlockAt(xx, y - 1, zz).setTypeId(9)
+        if 15 < y < randint(129, 134):
+            for i in range(y, y - 10, -1):
+                if shot.getBlockTypeId(x, i, z) == 78:
+                    self.world.getBlockAt(xx, i, zz).setTypeId(0)
+                elif shot.getBlockTypeId(x, i - 1, z) == 79:
+                    self.world.getBlockAt(xx, i - 1, zz).setTypeId(8)
 
     def winterise(self, shot, x, y, z, xx, zz):
-        if shot.getBlockTypeId(x, y - 1, z) == 9 and shot.getBlockData(x, y - 1, z) == 0:
+        if shot.getBlockTypeId(x, y - 1, z) in (8, 9) and shot.getBlockData(x, y - 1, z) == 0:
             self.world.getBlockAt(xx, y - 1, zz).setTypeId(79)
         elif shot.getBlockTypeId(x, y, z) == 0 and shot.getBlockTypeId(x, y - 1, z) not in (9, 8):
             def glass():
-                for j in range(y + 1, 255):
+                for j in range(y + 1, y + 20):
                     if shot.getBlockTypeId(x, j, z) != 0:
                         return False
                 return True

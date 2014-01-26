@@ -76,9 +76,10 @@ def loaddata():
 @hook.enable
 def onEnable():
     world = server.getWorld('world')
-    global timer, newchunktimer
+    global timer, newchunktimer, erosion
     timer = SeasonEditor(world, loaddata())
     newchunktimer = NewChunkTimer(world)
+    erosion = Erosion(world)
     server.getScheduler().scheduleSyncRepeatingTask(pyplugin, timer, 2000, 20 * 60 * 20)
     server.getScheduler().scheduleSyncRepeatingTask(pyplugin, newchunktimer, 100, 20 * 5)
     logs.info("enabled")
@@ -118,4 +119,13 @@ def onSECommand(sender, args):
     if args[0][0] in rep:
         timer.months[int(strftime('%w'))] = rep[args[0][0]]
         logs.msg(sender, "season edited")
+    return True
+
+@hook.command("erosion")
+def onECommand(sender, args):
+    name = sender.getName()
+    if name != "CONSOLE":
+        chunk = sender.getLocation().getChunk()
+        erosion.river(chunk)
+        logs.msg(sender, "chunk's edited")
     return True
