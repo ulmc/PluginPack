@@ -87,7 +87,7 @@ class SeasonEditor(Runnable):
                 self.world.getBlockAt(xx, y - 1, zz).setTypeId(79)
             elif y1 == 8 and shot.getBlockData(x, y - 1, z) == 0:
                 self.world.getBlockAt(xx, y - 1, zz).setTypeId(79)
-            elif shot.getBlockTypeId(x, y, z) == 0 and y1 not in (44, 53, 67, 108, 109, 126, 134, 135, 136, 156):
+            elif shot.getBlockTypeId(x, y, z) == 0 and y1 not in (44, 53, 67, 108, 109, 128, 126, 134, 135, 136, 156):
                 if y1 == 18:
                     for i in xrange(y - 2, y - 25, -1):
                         y2 = shot.getBlockTypeId(x, i, z)
