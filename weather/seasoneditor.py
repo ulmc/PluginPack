@@ -87,16 +87,16 @@ class SeasonEditor(Runnable):
                 self.world.getBlockAt(xx, y - 1, zz).setTypeId(79)
             elif y1 == 8 and shot.getBlockData(x, y - 1, z) == 0:
                 self.world.getBlockAt(xx, y - 1, zz).setTypeId(79)
-            elif y1 == 18:
-                for i in xrange(y - 2, y - 25, -1):
-                    y2 = shot.getBlockTypeId(x, i, z)
-                    if y2 not in (18, 0, 17):
-                        if y2 == 9:
-                            self.world.getBlockAt(xx, i, zz).setTypeId(79)
-                        elif y2 == 8 and shot.getBlockData(x, i, z) == 0:
-                            self.world.getBlockAt(xx, i, zz).setTypeId(79)
-                        break
-            elif shot.getBlockTypeId(x, y, z) == 0:
+            elif shot.getBlockTypeId(x, y, z) == 0 and y1 not in (44, 53, 67, 108, 109, 126, 134, 135, 136, 156):
+                if y1 == 18:
+                    for i in xrange(y - 2, y - 25, -1):
+                        y2 = shot.getBlockTypeId(x, i, z)
+                        if y2 not in (18, 0, 17):
+                            if y2 == 9:
+                                self.world.getBlockAt(xx, i, zz).setTypeId(79)
+                            elif y2 == 8 and shot.getBlockData(x, i, z) == 0:
+                                self.world.getBlockAt(xx, i, zz).setTypeId(79)
+                            break
                 # def glass():
                 #     for j in range(y + 1, y + 25):
                 #         if shot.getBlockTypeId(x, j, z) != 0:
@@ -124,4 +124,3 @@ class SeasonEditor(Runnable):
         chunks = self.world.getLoadedChunks()
         for chunk in chunks:
             self.change(chunk)
-
